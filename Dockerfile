@@ -1,7 +1,20 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
 
-COPY ./requirements.txt /app/requirements.txt
+# Set the working directory in the container
+WORKDIR /app
 
-RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-COPY ./app /app/app
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose port 5000 (Flask default port)
+EXPOSE 5000
+
+# Define environment variable to prevent Python from buffering stdout and stderr
+ENV PYTHONUNBUFFERED=1
+
+# Run app.py when the container launches
+CMD ["python", "app.py"]
